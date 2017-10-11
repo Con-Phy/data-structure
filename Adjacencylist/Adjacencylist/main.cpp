@@ -88,6 +88,7 @@ void DFS(ALGraph &G,int v)
 	}
 }
 
+
 void BFS(ALGraph &G)
 {
 	for (unsigned int i=0;i<G.vexnum;i++) visited[i]=false;
@@ -176,8 +177,12 @@ void LOrderTranverse(BiTNode *T)
 struct CSNode 
 {
 	std::string data;
-	CSNode *firstchild,*nextsibling;
+	CSNode *lchild,*nextsibling;
 };
+void DFSTree(ALGraph G,int v,CSNode *T)
+{
+
+}
 int main()
 {
 	ALGraph allGraph;
