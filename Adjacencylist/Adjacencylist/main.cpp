@@ -135,6 +135,49 @@ struct OLGraph
 	VexNode xlist[4];
 	int vexnum,arcnum;
 };
+struct BiTNode 
+{
+	std::string data;
+	BiTNode *lchild,*rchild;
+};
+void PreOderTraverse(BiTNode *T)
+{
+	if (T)
+	{
+		std::cout<<T->data;
+		if (T->lchild)
+		{
+			PreOderTraverse(T->lchild);
+		}
+		if (T->rchild)
+		{
+			PreOderTraverse(T->rchild);
+		}
+	}
+}
+void MOrderTranverse(BiTNode *T)
+{
+	if (T)
+	{
+		MOrderTranverse(T->lchild);
+		std::cout<<T->data;
+		MOrderTranverse(T->rchild);
+	}
+}
+void LOrderTranverse(BiTNode *T)
+{
+	if (T)
+	{
+		LOrderTranverse(T->lchild);
+		LOrderTranverse(T->rchild);
+		std::cout<<T->data;
+	}
+}
+struct CSNode 
+{
+	std::string data;
+	CSNode *firstchild,*nextsibling;
+};
 int main()
 {
 	ALGraph allGraph;
@@ -256,42 +299,83 @@ int main()
 		olGraph.xlist[i].firstout=NULL;
 	}
 	int t,h;
-	for (unsigned int i=0;i<olGraph.arcnum;i++)
-	{
-		std::cin>>t>>h;
-		ArcBox *pp=new ArcBox;
-		pp->tailvex=t;
-		pp->headvex=h;
-		pp->hlink=NULL;
-		pp->tlink=NULL;
-		ArcBox **po = new ArcBox *;
-		po = &(olGraph.xlist[t].firstout);
-		ArcBox **pi = new ArcBox *;
-		pi = &(olGraph.xlist[h].firstin);
-		while (true)
-		{
-			if (*po==NULL)
-			{
+	//for (unsigned int i=0;i<olGraph.arcnum;i++)
+	//{
+	//	std::cin>>t>>h;
+	//	ArcBox *pp=new ArcBox;
+	//	pp->tailvex=t;
+	//	pp->headvex=h;
+	//	pp->hlink=NULL;
+	//	pp->tlink=NULL;
+	//	ArcBox **po = new ArcBox *;
+	//	po = &(olGraph.xlist[t].firstout);
+	//	ArcBox **pi = new ArcBox *;
+	//	pi = &(olGraph.xlist[h].firstin);
+	//	while (true)
+	//	{
+	//		if (*po==NULL)
+	//		{
 
-				*po = pp;
-				break;
-			}
-			else
-			{
-				po = &((*po)->tlink);
-			}
-		}
-		while (true)
-		{
-			if (*pi==NULL)
-			{
-				*pi = pp;
-				break;
-			}
-			else
-			{
-				pi = &((*pi)->hlink);
-			}
-		}
-	}
+	//			*po = pp;
+	//			break;
+	//		}
+	//		else
+	//		{
+	//			po = &((*po)->tlink);
+	//		}
+	//	}
+	//	while (true)
+	//	{
+	//		if (*pi==NULL)
+	//		{
+	//			*pi = pp;
+	//			break;
+	//		}
+	//		else
+	//		{
+	//			pi = &((*pi)->hlink);
+	//		}
+	//	}
+	//}
+	BiTNode *biTNode = new BiTNode;
+	biTNode->data = "-";
+	biTNode->lchild = new BiTNode;
+	biTNode->lchild->data="+";
+	biTNode->lchild->lchild = new BiTNode;
+	biTNode->lchild->lchild->data="a";
+	biTNode->lchild->lchild->lchild=NULL;
+	biTNode->lchild->lchild->rchild=NULL;
+	biTNode->lchild->rchild = new BiTNode;
+	biTNode->lchild->rchild->data="*";
+	biTNode->lchild->rchild->lchild=new BiTNode;
+	biTNode->lchild->rchild->lchild->data="b";
+	biTNode->lchild->rchild->lchild->lchild=NULL;
+	biTNode->lchild->rchild->lchild->rchild=NULL;
+	biTNode->lchild->rchild->rchild=new BiTNode;
+	biTNode->lchild->rchild->rchild->data="-";
+	biTNode->lchild->rchild->rchild->lchild=new BiTNode;
+	biTNode->lchild->rchild->rchild->lchild->data="c";
+	biTNode->lchild->rchild->rchild->lchild->lchild=NULL;
+	biTNode->lchild->rchild->rchild->lchild->rchild=NULL;
+	biTNode->lchild->rchild->rchild->rchild=new BiTNode;
+	biTNode->lchild->rchild->rchild->rchild->data="d";
+	biTNode->lchild->rchild->rchild->rchild->lchild=NULL;
+	biTNode->lchild->rchild->rchild->rchild->rchild=NULL;
+
+	biTNode->rchild=new BiTNode;
+	biTNode->rchild->data="/";
+	biTNode->rchild->lchild=new BiTNode;
+	biTNode->rchild->lchild->data="e";
+	biTNode->rchild->lchild->lchild=NULL;
+	biTNode->rchild->lchild->rchild=NULL;
+	biTNode->rchild->rchild=new BiTNode;
+	biTNode->rchild->rchild->data="f";
+	biTNode->rchild->rchild->lchild=NULL;
+	biTNode->rchild->rchild->rchild=NULL;
+
+	PreOderTraverse(biTNode);
+	std::cout<<std::endl;
+	MOrderTranverse(biTNode);
+	std::cout<<std::endl;
+	LOrderTranverse(biTNode);
 }
