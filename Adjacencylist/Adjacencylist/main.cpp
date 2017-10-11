@@ -177,11 +177,41 @@ void LOrderTranverse(BiTNode *T)
 struct CSNode 
 {
 	std::string data;
-	CSNode *lchild,*nextsibling;
+	CSNode *lchild,*rsibling;
 };
-void DFSTree(ALGraph G,int v,CSNode *T)
+void DFSTree(ALGraph G,int v,CSNode *&T)
 {
 
+}
+void DFSForest(ALGraph G,CSNode *&T)
+{
+	T=NULL;
+	CSNode **q;
+	for (unsigned int v=0;v<G.vexnum;++v)
+	{
+		visited[v]=false;
+	}
+	for (unsigned int v=0;v<G.vexnum;++v)
+	{
+		if (!visited[v])
+		{
+			CSNode *p = new CSNode;
+			p->data = G.vertices[v].data;
+			p->lchild=NULL;
+			p->rsibling=NULL;
+			
+			if (!T)
+			{
+				T=p;
+			}
+			else
+			{
+				T->rsibling = new CSNode;
+				T->rsibling = p;
+			}
+			DFSTree(G,v,p);
+		}
+	}
 }
 int main()
 {
@@ -341,6 +371,8 @@ int main()
 	//			pi = &((*pi)->hlink);
 	//		}
 	//	}
+	//delete po;
+	//delete pi;
 	//}
 	BiTNode *biTNode = new BiTNode;
 	biTNode->data = "-";
