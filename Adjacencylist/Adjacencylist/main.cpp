@@ -179,13 +179,39 @@ struct CSNode
 	std::string data;
 	CSNode *lchild,*rsibling;
 };
-void DFSTree(ALGraph G,int v,CSNode *&T)
+void DFSTree(ALGraph G,int v,CSNode **T)
 {
+	visited[v]=true;
+	bool first = true;
+	CSNode **q;
+	for (ArcNode *pp = G.vertices[v].firstarc;pp;pp=pp->nextarc)
+	{
+		if (!visited[pp->adjvex])
+		{
+			CSNode *p = new CSNode;
+			p->data=G.vertices[pp->adjvex].data;
+			p->lchild=NULL;
+			p->rsibling=NULL;
+			if (first)
+			{
+				(*T)->lchild=p;
+				q=&(p->rsibling);
+				first =false;
+			}
+			else
+			{
+				*q=p;
+				q=&(p->rsibling);
+			}
+			DFSTree(G,pp->adjvex,&p);
+		}
+	}
+	//delete q;
 
 }
-void DFSForest(ALGraph G,CSNode *&T)
+void DFSForest(ALGraph G,CSNode **T)
 {
-	T=NULL;
+	*T=NULL;
 	CSNode **q;
 	for (unsigned int v=0;v<G.vexnum;++v)
 	{
@@ -200,18 +226,20 @@ void DFSForest(ALGraph G,CSNode *&T)
 			p->lchild=NULL;
 			p->rsibling=NULL;
 			
-			if (!T)
+			if (!(*T))
 			{
-				T=p;
+				*T=p;
+				q = &(p->rsibling);
 			}
 			else
 			{
-				T->rsibling = new CSNode;
-				T->rsibling = p;
+				*q = p;
+				q = &(p->rsibling);
 			}
-			DFSTree(G,v,p);
+			DFSTree(G,v,&p);
 		}
 	}
+	//delete q;
 }
 int main()
 {
@@ -415,4 +443,7 @@ int main()
 	MOrderTranverse(biTNode);
 	std::cout<<std::endl;
 	LOrderTranverse(biTNode);
+
+	CSNode *F = NULL;
+	DFSForest(allGraph,&F);
 }
