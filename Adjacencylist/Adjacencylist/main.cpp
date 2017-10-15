@@ -57,6 +57,7 @@ bool visited[MAX_VERTEX_NUM];
 typedef struct ArcNode 
 {
 	int adjvex;
+	int w;
 	ArcNode *nextarc;
 }ArcNode;
 
