@@ -89,6 +89,7 @@ void DFS(ALGraph &G,int v)
 }
 
 
+
 void BFS(ALGraph &G)
 {
 	for (unsigned int i=0;i<G.vexnum;i++) visited[i]=false;
@@ -119,11 +120,11 @@ void BFS(ALGraph &G)
 	}
 }
 
-typedef struct ArcBox 
+struct ArcBox 
 {
 	int tailvex,headvex;
 	ArcBox *tlink,*hlink;
-}ArcBox;
+};
 
 struct VexNode 
 {
@@ -136,6 +137,32 @@ struct OLGraph
 	VexNode xlist[4];
 	int vexnum,arcnum;
 };
+void DFS(OLGraph &G,int v)
+{
+	visited[v]=true;
+	for (ArcBox *pp=G.xlist[v].firstout;pp;pp=pp->tlink)
+	{
+		if (!visited[pp->headvex])
+		{
+			DFS(G,pp->headvex);
+		}
+	}
+	std::cout<<v<<std::endl;
+
+}
+void DFSh(OLGraph &G,int v)
+{
+	visited[v]=true;
+	for (ArcBox *pp=G.xlist[v].firstin;pp;pp=pp->hlink)
+	{
+		if (!visited[pp->tailvex])
+		{
+			DFS(G,pp->tailvex);
+		}
+	}
+	std::cout<<v<<std::endl;
+
+}
 struct BiTNode 
 {
 	std::string data;
@@ -362,46 +389,44 @@ int main()
 		olGraph.xlist[i].firstout=NULL;
 	}
 	int t,h;
-	//for (unsigned int i=0;i<olGraph.arcnum;i++)
-	//{
-	//	std::cin>>t>>h;
-	//	ArcBox *pp=new ArcBox;
-	//	pp->tailvex=t;
-	//	pp->headvex=h;
-	//	pp->hlink=NULL;
-	//	pp->tlink=NULL;
-	//	ArcBox **po = new ArcBox *;
-	//	po = &(olGraph.xlist[t].firstout);
-	//	ArcBox **pi = new ArcBox *;
-	//	pi = &(olGraph.xlist[h].firstin);
-	//	while (true)
-	//	{
-	//		if (*po==NULL)
-	//		{
+	for (unsigned int i=0;i<olGraph.arcnum;i++)
+	{
+		std::cin>>t>>h;
+		ArcBox *pp=new ArcBox;
+		pp->tailvex=t;
+		pp->headvex=h;
+		pp->hlink=NULL;
+		pp->tlink=NULL;
+		ArcBox **po;
+		po = &(olGraph.xlist[t].firstout);
+		ArcBox **pi;
+		pi = &(olGraph.xlist[h].firstin);
+		while (true)
+		{
+			if (*po==NULL)
+			{
 
-	//			*po = pp;
-	//			break;
-	//		}
-	//		else
-	//		{
-	//			po = &((*po)->tlink);
-	//		}
-	//	}
-	//	while (true)
-	//	{
-	//		if (*pi==NULL)
-	//		{
-	//			*pi = pp;
-	//			break;
-	//		}
-	//		else
-	//		{
-	//			pi = &((*pi)->hlink);
-	//		}
-	//	}
-	//delete po;
-	//delete pi;
-	//}
+				*po = pp;
+				break;
+			}
+			else
+			{
+				po = &((*po)->tlink);
+			}
+		}
+		while (true)
+		{
+			if (*pi==NULL)
+			{
+				*pi = pp;
+				break;
+			}
+			else
+			{
+				pi = &((*pi)->hlink);
+			}
+		}
+	}
 	BiTNode *biTNode = new BiTNode;
 	biTNode->data = "-";
 	biTNode->lchild = new BiTNode;
@@ -443,7 +468,11 @@ int main()
 	MOrderTranverse(biTNode);
 	std::cout<<std::endl;
 	LOrderTranverse(biTNode);
-
+	std::cout<<std::endl;
 	CSNode *F = NULL;
+	for (unsigned int i=0;i<olGraph.vexnum;i++) visited[i]=false;
+	DFS(olGraph,0);
+	for (unsigned int i=0;i<olGraph.vexnum;i++) visited[i]=false;
+	DFSh(olGraph,0);
 	DFSForest(allGraph,&F);
 }
